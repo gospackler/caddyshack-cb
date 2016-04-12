@@ -1,6 +1,7 @@
 package couchbase
 
 import (
+	"github.com/bushwood/caddyshack"
 	"github.com/bushwood/caddyshack/model"
 	"github.com/couchbase/gocb"
 )
@@ -104,26 +105,6 @@ func (c *CouchbaseStore) DestroyOne(key string) error {
 	return nil
 }
 
-func (c *CouchbaseStore) Read(q NickelQuery) (error, []*CouchbaseObject) {
-	query := gocb.NewN1qlQuery(q.query)
-	rows, err := c.bucket.ExecuteN1qlQuery(query, nil)
-	if err != nil {
-		return err, nil
-	}
-
-	var document interface{}
-	var documents []*CouchbaseObject
-	for rows.Next(&document) {
-		doc := &CouchbaseObject{
-			data: document,
-		}
-		documents = append(documents, doc)
-	}
-
-	err = rows.Close()
-	if err != nil {
-		return err, nil
-	}
-
-	return nil, documents
+func (c *CouchbaseStore) Read(q caddyshack.Query) (error, []caddyshack.StoreObject) {
+	return q.Execute()
 }

@@ -13,8 +13,7 @@ type CouchbaseObject struct {
 
 func NewCouchbaseObject(key string) *CouchbaseObject {
 	return &CouchbaseObject{
-		key:  key,
-		data: nil,
+		key: key,
 	}
 }
 
@@ -32,4 +31,8 @@ func (c *CouchbaseObject) SetData(data interface{}) {
 
 func (c *CouchbaseObject) SetId(id gocb.Cas) {
 	c.objectId = id
+}
+
+func (c *CouchbaseObject) SetExpiry(time uint32) {
+	c.expiry = time
 }
