@@ -4,20 +4,20 @@ import "github.com/couchbase/gocb"
 
 // Nickel is a pseudonym for N1ql which is Couchbase's query language.
 type NickelQuery struct {
-	query  string
-	bucket *gocb.Bucket
+	query   string
+	cluster *gocb.Cluster
 }
 
-func NewNickelQuery(query string, bucket *gocb.Bucket) *NickelQuery {
+func NewNickelQuery(query string, cluster *gocb.Cluster) *NickelQuery {
 	return &NickelQuery{
-		query:  query,
-		bucket: bucket,
+		query:   query,
+		cluster: cluster,
 	}
 }
 
 func (n *NickelQuery) Execute() (error, []*CouchbaseObject) {
 	query := gocb.NewN1qlQuery(n.query)
-	rows, err := n.bucket.ExecuteN1qlQuery(query, nil)
+	rows, err := n.cluster.ExecuteN1qlQuery(query, nil)
 	if err != nil {
 		return err, nil
 	}

@@ -10,15 +10,19 @@ type CouchbaseStore struct {
 	model          *model.Definition
 	host           string
 	bucketName     string
+	bucketUser     string
 	bucketPassword string
 	bucket         *gocb.Bucket
+	cluster        *gocb.Cluster
 }
 
-func NewCouchbaseStore(host, bucketName string) *CouchbaseStore {
+func NewCouchbaseStore(host, bucketName, bucketUser, bucketPassword string) *CouchbaseStore {
 	return &CouchbaseStore{
-		name:       "couchbase-store",
-		host:       host,
-		bucketName: bucketName,
+		name:           "couchbase-store",
+		host:           host,
+		bucketName:     bucketName,
+		bucketUser:     bucketUser,
+		bucketPassword: bucketPassword,
 	}
 }
 
@@ -27,6 +31,12 @@ func (c *CouchbaseStore) ConnectBucket() error {
 	if err != nil {
 		return err
 	}
+	clusterAuth := &gocb.ClusterAuthenticator{
+		Buckets:  nil,
+		Username: c.bucketUser,
+		Password: c.bucketPassword,
+	}
+	cluster.Authenticate(clusterAuth)
 
 	b, err := cluster.OpenBucket(c.bucketName, c.bucketPassword)
 	if err != nil {
@@ -34,6 +44,7 @@ func (c *CouchbaseStore) ConnectBucket() error {
 	}
 
 	c.bucket = b
+	c.cluster = cluster
 	return nil
 }
 
