@@ -3,6 +3,7 @@ package couchbase
 import (
 	"github.com/bushwood/caddyshack/model"
 	"github.com/couchbase/gocb"
+	"github.com/satori/go.uuid"
 )
 
 type CouchbaseStore struct {
@@ -69,6 +70,9 @@ func (c *CouchbaseStore) Init(model *model.Definition) (error, *CouchbaseStore) 
 }
 
 func (c *CouchbaseStore) Create(obj *CouchbaseObject) error {
+	if obj.key == "" {
+		obj.key = uuid.NewV4().String()
+	}
 	id, err := c.bucket.Insert(obj.key, obj.data, obj.expiry)
 	if err != nil {
 		return err
