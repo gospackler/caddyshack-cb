@@ -32,8 +32,6 @@ func (c *CouchbaseStore) ConnectBucket() error {
 		return err
 	}
 
-	// This is needed to ensure the auth field in the Cluster struct is not nil.
-	// I will open up a bug if the maintainers find it to be an issue.
 	clusterAuth := &gocb.ClusterAuthenticator{
 		Buckets:  nil,
 		Username: c.bucketUser,
