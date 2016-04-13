@@ -1,7 +1,6 @@
 package couchbase
 
 import (
-	"github.com/bushwood/caddyshack"
 	"github.com/bushwood/caddyshack/model"
 	"github.com/couchbase/gocb"
 )
@@ -105,6 +104,6 @@ func (c *CouchbaseStore) DestroyOne(key string) error {
 	return nil
 }
 
-func (c *CouchbaseStore) Read(q caddyshack.Query) (error, []caddyshack.StoreObject) {
+func (c *CouchbaseStore) Read(q *NickelQuery) (error, []*CouchbaseObject) {
 	return q.Execute()
 }
